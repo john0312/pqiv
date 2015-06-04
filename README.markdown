@@ -128,6 +128,9 @@ Known bugs
 Changelog
 ---------
 
+ * Added --background-gradient to draw gradient backgrounds in fullscreen,
+   instead of the default black one
+
 pqiv 2.8
  * Added option --allow-empty-window: Show pqiv even if no images can be loaded
  * Explicitly allow to load all files from a directory multiple times
