@@ -30,6 +30,7 @@ Features
  * Caches zoomed images for smoother movement
  * Supports fade image transition animations
  * Supports various image and video formats through a rich set of backends
+ * Comes with an interactive montage mode (a.k.a. "image grid")
  * Customizable key-bindings with support for VIM-like key sequences, action
    cycling and binding multiple actions to a single key
 
@@ -61,7 +62,7 @@ If you'd like to compile pqiv manually, you'll need
 
  * gtk+ 3.0 *or* gtk+ 2.6
  * gdk-pixbuf 2.2 (included in gtk+)
- * glib 2.8
+ * glib 2.8 (with gvfs for opening URLs)
  * cairo 1.6
  * gio 2.0
  * gdk 2.8
@@ -135,8 +136,16 @@ pqiv 2.9 (wip)
  * Add option --info-box-colors to customize the colors used in the info box
  * Allow to view help even if no display is available
  * Add --version
+ * Bind Control+t to toggle to "maintain scale mode" by default
+ * Fixed support for huge images (>32,767px) to the GdkPixbuf backend
+ * Added a montage/image grid mode (bound to `m` by default)
 
-pqiv 2.8.2
+pqiv 2.8.5
+ * Fixed an issue where the checkerboard pattern sometimes was visible at image
+   borders
+ * Fixed image rotation in low-memory mode
+ * Fix a memory leak (leaking a few bytes each time an image is drawn)
+ * Correctly handle string arguments from the configuration file
  * Fix building with old glib versions that do not expose their x11 dependency
    in pkgconfig
  * Fix support for duplicate files in sorted mode

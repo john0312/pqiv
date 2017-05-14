@@ -38,6 +38,11 @@
 #define av_packet_unref av_free_packet
 #endif
 
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 0, 0)
+#define avcodec_free_frame av_free
+#define AV_PIX_FMT_RGB32 PIX_FMT_RGB32
+#endif
+
 #if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 41, 0)
 #define AV_COMPAT_CODEC_DEPRECATED
 #endif
@@ -283,7 +288,11 @@ void file_type_libav_load(file_t *file, GInputStream *data, GError **error_point
 		file->height = private->sample_aspect_ratio.den * private->pixel_height / private->sample_aspect_ratio.num;
 	}
 
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 0, 0)
+	size_t num_bytes = avpicture_get_size(PIX_FMT_RGB32, file->width, file->height);
+#else
 	size_t num_bytes = av_image_get_buffer_size(AV_PIX_FMT_RGB32, file->width, file->height, 16);
+#endif
 	private->buffer = (uint8_t *)g_malloc(num_bytes * sizeof(uint8_t));
 
 	if(file->width == 0 || file->height == 0) {
@@ -363,7 +372,11 @@ void file_type_libav_draw(file_t *file, cairo_t *cr) {/*{{{*/
 
 		// Prepare buffer for RGB32 version
 		uint8_t *buffer = private->buffer;
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 0, 0)
+		avpicture_fill((AVPicture *)rgb_frame, buffer, PIX_FMT_RGB32, file->width, file->height);
+#else
 		av_image_fill_arrays(rgb_frame->data, rgb_frame->linesize, buffer, AV_PIX_FMT_RGB32, file->width, file->height, 16);
+#endif
 
 		// If a valid frame is available..
 		if(frame->data[0]) {
